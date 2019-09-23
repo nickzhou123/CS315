@@ -1,0 +1,488 @@
+<!DOCTYPE html><html>
+<head>
+    <title>登录 - CAS &#8211; Central Authentication Service</title>
+    <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="/cas/css/font-awesome.min.css" /><link rel="stylesheet" href="/cas/css/bootstrap.min.css" /><link rel="stylesheet" href="/cas/css/cas.css"/><link rel="icon" href="/cas/favicon.ico" type="image/x-icon"/><script src="/cas/js/jquery.min.js"></script>
+    <script src="/cas/js/jquery-ui.min.js"></script>
+    <script src="/cas/js/jquery.cookie.min.js"></script>
+    <!--<script src="//www.google.com/recaptcha/api.js" async defer th:if="${recaptchaSiteKey}"></script>--><script src="/cas/js/bootstrap.min.js"></script>
+    <script>
+        /*<![CDATA[*/
+        var trackGeoLocation = false;
+//        var googleAnalyticsTrackingId = null;
+//        if (googleAnalyticsTrackingId != null && googleAnalyticsTrackingId != '') {
+//            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+//                        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+//                    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+//            })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+//            ga('create', googleAnalyticsTrackingId, 'auto');
+//            ga('send', 'pageview');
+//        }
+        /*]]>*/
+    </script>
+</head>
+
+<body id="cas" class="login">
+<div id="container" class="container">
+    <div style="float:right;color:white;">
+        <form style ='display:inline;' method="post"><input type="hidden" name="locale" value="zh_CN"><button style="color:white; text-decoration: none;" class="btn-link"  type="submit">中文</button></form>|
+        <form style ='display:inline;' method="post"><input type="hidden" name="locale" value="en"><button style="color:white; text-decoration: none;" class="btn-link" type="submit">En</button></form>
+    </div>
+    <header>
+    <div id="logo"  title="转到南方科技大学网站首页">SUSTech</div>
+    <!--<h1>Apereo Central Authentication Service (CAS)</h1>--></header>
+<div id="content">
+        <div class="row">
+            <div class="col-sm-12 col-md-6">
+                <div class="box" id="login">
+    <div class="login-header">
+        <h2>登录</h2>
+        <span class="fa-stack fa-2x hidden-xs">
+          <i class="fa fa-circle fa-stack-2x"></i>
+          <i class="fa fa-lock fa-stack-1x fa-inverse"></i>
+        </span>
+    </div>
+
+    <form method="post" id="fm1">
+
+        <h2>请输入您的用户名和密码.</h2>
+
+        <section class="row">
+            <label for="username">用户名:</label>
+
+            <div>
+                <input class="required"
+                       id="username"
+                       size="25"
+                       tabindex="1"
+                       type="text"
+                       accesskey="n"
+                       autocomplete="off" name="username" value=""/></div>
+        </section>
+
+        <section class="row">
+            <label for="password">密　码:</label>
+            
+            <div>
+                <input class="required"
+                       type="password"
+                       id="password"
+                       size="25"
+                       tabindex="2"
+                       accesskey="p"
+                       autocomplete="off" name="password" value=""/><span id="capslock-on" style="display:none;">
+                    <p>
+                        <i class="fa fa-exclamation-circle"></i>
+                        <span>大写键已打开</span>
+                    </p>
+                </span>
+            </div>
+        </section>
+        <section class="row check">
+            </section>
+        
+        <section class="row btn-row">
+            <input type="hidden" name="execution" value="930e46ad-a0f5-4ce8-86b0-6eaff67fd90c_ZXlKaGJHY2lPaUpJVXpVeE1pSjkuZGxWUFEwNHZVbXcxZVZka2JIQkhSM1l6WTJWcGVVWjZUR3hVYjJkMGFITXlRbkl6WmpoS2RHTlJVamRNUjI1MFNqQnZZM0JUWWtzeFFuWTBURFpNYTA4clZITlNPVkJqVW1wSWJWcDZlSFJRTkcxSGFUazJXV2N5YUZVNFFWWXJaekJQV0ZJdlpURnlSWFp6VDBjclRHTmpVbTFMZVc4dlltOUtka2RaT0ZodWRWZFpkbE0wTTJacGNFaG1WRTFwTmpWR1JXaHNaSGhuTW1wWGVpOTNSVlJXZEcweWJWZExMMnR3Ykc4MVNEZHJNRW92V0V0RlNVOVVTMDlKZHpSU2QzZEJNSGxyTVdkMlJtSkdZMk5oTTA5dk9GZFVOMU55WVN0SGRISTFZakY2YUN0VGRUQmxkazE1YW0xdVpVVkdaRWxHVFVoeGMwODViVFp5UlhOblpHUkVVeXRwVFU4NVNYTm1RVEEzY1RJNFNucEVNRVkxT0RCM1NGSldSM04yVjFnNFp5dFZVVGs1ZFVoWVkyRnpia0l6UVRZclUyNW9UVVJ3TlRORU1XWkxNR2RsVFZSMVkzazRUa3M0YTBGak1VTXlabFphY2sxV1V6UnVjRzVKT1ZwdE5FTTVjRE5tVUZaM2JVOUxWMHBETDA4cmFGRnpRbmN2Y1M5ekwxbHBiVTFDTURaaFpXcHdjMWxMT1ZneVVVSmlZVXRZU0ZaU1JrWXdiRE00Y0hkWk1IUTBUak5oTld0VGNrbFdjRnBLYmpBMmREWmtUVE4xZEUxV1RXUnZORmhyVVZod09WQkVZVm8yYTFGWlNIbHdSUzh4YlhCT2JrUkJkRkF5YmtSNVQwMUxaRFZXZFhKRk9WaHplREpoTTJGMk9EVlpNVTFPYlhKRFRGZHFRemR5YVRGbVZUTldTRXhRY0cxc1VGbDVkMnRLWm5WSU0yd3JjMVZQU0Rsa1VWTmhkWE53ZDNSemRWbG5SWFYxUlZwbVVXVnBVbXRST0Vkd2FIVm1jbkJFWmpsRE56RXdUWFpMYTNSSE5VUktXVkJxYzFWU1RFaDVlR0ZMTDNWdmVWVTFaa1owVjA5NmEyOHlaeXREVEROM1pVSlBNbEpIZVhFd00xbFhha016TkRSWmJXbDNlVkI2TXpka1VVcHFja3BuSzNseVJqWldTVVptT0hCTGVrd3hiRFpVYVVOSVFsRldaREkzTmk5UGRIaEtPRzF4UmpGTFYxQlVTRUUyYkUxR1JXZE5XV3h4ZWpod2RsRTROWEJIZGxVNVJ6QlZWRk0zVlRscVJVZFdUMmRLVFhBMGRGWlBRMGhWVEVGa01sbzFNMHRqUkcxVE9ESXJTekpyTWxWd01VOTBXVGgwUjBGS04xaExlSHBCT1RobllYWmxhbXRuTTFGc1dGWlJaR3BIZDJsbmNHWkNTRmxGVFVWd2MyRTRNa3cwZUROU2FHSnJWSE5uZFRWbFlrZzVWbWxPVUdKcVFqVm1jblJUV1hFeWMyYzVUV0ZrTmtwNE5FUnRZV3BQU0VOck1sTTFkRUZ1YVVaYVVVbDJLekZ2VFVSSE5tRnRRMVpVZUU4eFptWlRLMHRzU0RWTVIxVnVUR3BzYVhoeGVFVXdlRTV5TWxkV2JEUndibXQwYkV0TVZYVndjWG92YTNOc05HSnNjbEEyWVZaUWRGSk5la0ozVDFoalVrZERlRzFCVW1RMWNXMDFTRmxJVVZkcWFHaGFjRzV6YURSaWRFaFhNVFIxZVRJNE1UTTNlQ3RRYUd4cEsyTjJkemhtVW1sSVJVUlFUMjV0WlZKeGNVbE5WbFV3TTA5ak5HOU9iMGRGZHpScGJsWnVUV1kyZEdwRFlXSXZaM1pQUjFKR01UUkhkR3B1UzIxUFVHWkNjemh0VUM5Q2VVRnRTM05hV0hSVlJtMXdiVkZRZFZOd00xUk1Xa05tVDNrMlFtUklZVlp0UWxBdk5uQmtZWFl2ZVVNMGJHSXhUalUwZEZOcU9GbFFjblZyVTFRd1VGVk1PVlIyZEd4MlQxa3ZTbVpIZFc1eFZ6TlNPR0ZDWm5CdVpuQjJiR1pDVUd0M0t6VTFZM1JPZHpKRmMweG5XVXN2TmsxbVdUUnNPRWxLUlU1NFkyUlVlRmxISzBSaFZ6VXZZVnA2VmxoUUswRnhWWGxEVlc4dlNVaGtRV1J5WlRZeVIxcE9TMmR2UjNwVVJ6TXhaWHBUVEhVek4zbGFRMmxTVWs5VFZTOHZRVTVFVmtsT2IxaERMM0JhT1ZoclRXaGxVMDVXTTA1a0sweE9hWHA1ZDJkNFVVWkxXbGxQT0c5R01tSlJNSFp1VTFvNUwwdFpOMkp1UVdSc2J6bHpaVU01WVdNM1NtRndibEpCZGtneGFVWkZVVGx1V25wWFkyNUVlbXR1UkdoMmNWTjRXbmxTT0VwMFVrMHZVVEZuWlc5R2FtZG1hblIyUm1NclFXMTVNa1E0TUZObVduaFlZMlZJV2xKTldXUnBiM0ozWmpCQlIwc3pZMVZ1VGsxdWNYY3pVMU5hZFRac1ZVNXlibmd5ZVVjdmFISllXRXN5UjBveVRtNHhTVEF6ZW1KTlFVNW9Va0oxUW1od1dsRlRXSFpYYURsM1EwUm5aMmg1ZFU0M1JFTnNaa040YjJ4dmEyZHlWVzByVVU4dmNEbEZka05CUlZGdGNYaGxTR3RuVURGaFdqSkdUMHhPVWxWM1NqWjVVVTF2UVRSSU1VY3ZiVEZVVkhsWE5EZDVTVGRCUVZJNE4xUlBiMll3WVU1VFdGUXZMM1I0Y0RkME1GTkdOV1pYVVRWMmRsVm5jelZQYlZSYWFHWTRSMnhZYVhkMU5YUm9hV1JqVmpaNGNFbDFlVU5LTW5wSFVEbEhTak5OYVVJelNWZGtjMVpJU21GT1VXNUhSM0ZaV1RaRldYUm9Rek4zT1RSaU9GRjNObW8wY0dRMVZUSnZWRlZGYWtJeVZtSXdTM04xS3pWaVkxcFdZVnBwTldGalZIcGllVmxhYW10RmFISmtkMXBNV0RsWVEyaFBObXRZZFZVMVFVMVdSMUp6YWtKNFdrSjVOV05aTWpOTFptNUVUM2szUTA5RWFXRndNVzR5YkRkNGJIWXhUM2ROTkdKT1VISkViMlZ2UTNkM2ExTlZkRWRrT0RSb1FrVlJNV2xpYjFaVVJFeDRZazR5Uml0aFozRTNXVlZyU0VZclZVMWFMMGRVZDFCMVFWSlNWWEJrUnk4dmMxaERRbVp1VlhselpteHdkRFE0YWxaSWQyeGplVEJTUW5GRFMxZHBaMHhxUlRGNGJHTlJRVVV2Y2taS1ZUVmthM2xKY0hCRlVGQXhUbEo2ZDBJNGExZE9jVnBTZUhBeVprZFVaVTVMVUV4RVF6RTFXVkF5WmxNMGRuSnFWazloYnpBNVZFY3ZOMlJEV2xaVVNrUjVhR2w2VUc4ck5GSldiUzk0Vms4NFFVSmFla0pHSzFORkwzbGhXVk5IVjJGTE1Xa3JUMDFGZUZjdlF6azJkalZSUzBGQ1NsaHNkV3BEUlhWWVkzRlhhVTkwTWtoWlkxbElZMFl3WjAxM1RsRmpUWHBqTm5aSFJ6aDRWVlpaWjBwTVFuVTVWSGRZVVhNMFZWZExiREZsUVVOWE0yWkNhWHB5ZWtvNFZFdHlWRkpYVEVOVE4ydEhSWFoxYm5CVk9HaEVSU3RWWm5GM2JXTmtSRzF1Y25SQlZFRnJPWEJtYm00clUydzBRVzlQVlRGUGRuZHJjRGxGUzNKdlowRXZibVZHV0ZwUFRVSlRaVVV2UjBGTlFubElNMUJUVGxCNFJtZzVWalZXV1hOMldFWnJVM05zVUZSU2VrdE9NMUp6U3pOdFYwbDFPV3hhWkdodFZERTVhMnhITWxaS1dsbGxiV2hDYlhKd015c3phVEJRUVV3M1JVZEdOMDB5WjFWRGIweDRXRzV0YjA1SmJrVnVOek50ZFhWTmFtbDFWRTVOYVhOSlQzVmlSVFl4Y1VwS1l6RXpVMjFhT1hwaVoxSkljMmxFY0V4MWMyeHdNelUwYjI1TVowTm1NUzh2YUU5a2RXOVRTekJFTkVvelVHdGpZVUp0VVROd1YzcGhRekp4V1ZsalkycDVOMUZDZVVkNFNVc3lLM1UxU0ZOR2NtYzVNMWhoWjJSR2RrSjFaVkpvZFN0SFQweFVaRVpPYkdWdlRGQkVjVTFDTW5sTVEwZGljV1JMUjFSQmVVNDJWa28zYXpsUFVWQkZLMm95TjFWUlMydGFhRmc0Um1NM1drWnlNMWt5YmpWMWFuSllUMEV6T1daa1lXb3lTR3B3Tm1ad2RGUldjWE0xTDFnNGN6RnFSbHBMWnpGVGNrMXBObXd3TW5jd1JuTnBaMFF6TW0xb0swaHFia2RyV0U5SFowTmxTVkpyVjBKMFMweE5ObTlLUnpJd01qRnBjVmxHZUM5QlVWWmlUME56WTFGdFVtbGhieXN2VDNWbWQzRjJPWGxhVFdrelZIQjJLMWhZZVhKMVFVRXpZemhFUVRkVVUxQlFlVTFRTW5Rd2EwOXdVbUZwU3k5clpqRXdlQzl2Y0dGT01FZDFXRlZUYnpCSU5rbGFTMHMyVEZVek16WjFXblZoTkRneFUxcEdSR1o0VkdKaVdteEJTVE4zTWpSNmJFOXJRa1Y0ZVRSdFpHOUxhVXAwVURKNlVYTnZaVk55UXl0VlkwNUhMMGhZYVV0MU5XaDFaR2hVV2paalpuTkVjRVZOVTFGdVVXdGthMFEwV1cxUWVHRTJWSEY0VlRoUlFsSkpVVFUxYmtsbE0zZFBZVkl2Ym01dFdYWk1TRlE0U0Rsc2FWTklOWHBIYVVSNEwydDZWa3gzVWt4amIweE1kRFY0T1hoWVFqUmphV1Y1TUU0eVNsaEpZM0I2YTNkbmIweFdSalpTU2xwMll6VTJSVkl5WWpKWWFrNUpWREZUYXpoQ1dtZHVkRVl4YzFKQ2FFSjRlRWR1ZW1GbFNVeFdTVWRMVWtsdmJsSnRTbXN5Y1ZaUFYwWlJSMmdyTVRSRFNsSmFOMEpCZEhNeFJWTXhNVXdyY1hORU1rSnFSa2xhVnk5NFFtWlpRMnAzT1c4MmNUTTFTRTlOVUVsTVpGRkVVVkJHU1RZclJIVndSMnRaUmxSVlNIQlRSa2RoY25sRWQyOWlSVU51VDIxRE1YZHVORkJIYldwRU5sZG9NSGhsVFdoQ1VtOWtjMUF3TlVsM05rZFlWMjh5U21KT1ZrOUxWMkUxTUc5cU5IWlZSMVJ3WW5aTGVIVllZbTR3VEVOM1MxaHZWekJVY1ZFNFRXZEpkMU53UlZwRU5VaDFRWFphYkZGU01UY3pNVTh5WkdGWlJDdFFlVzhyVUhCMk1td3lZM0UyT0ZkT2FuTTVTR3hrTUNzMU5TdElOR1oyTTIxdGJXUmFRalIzWlVaTE4zWkJUa2s1VTJsS1JVbEhOalJYZGxWMlQxQnZNbUZxVmpaNGNWcGlObXhKVUVoYWFHRkNhRlZCVUhkdlpEQkJVMGszTTBSRmFsRTRWbTVzWms0emRrTXhNbXBYUkVKeVoyWm9lVGt3UW5kb01tVmhia3BGYW5sVFNVdE1jM041UTNrNGVtMTFjalZ5UzJORUwwVklkVU0yTW5wTFRYcHJLMFpYTVRsVk5uVnRSV1JxYWtvdlVXWTFkRVpOVkd0elpqUnNjblZ2Vmpkc1JXNVVjM05GYTBWeVFtaGthamNyT1N0RGFuaHZSMjB3YjJRNFlXcDJkMU0wYVdGRlQxVlFXR2xhU1c1MmJqQmlNa2xpV1hCSlptTlpSWFZOV0RSYVdtUTJPRVpoV2t0alZXOUNZM0l3YVVKSlZFaEhhblV5TjNCRFRFTXZOa1JKVDBOdmFtVlhNRnA1VTNKcWVXSnpSSGxYYUZKS1JsaEhlVmxyYkhRNFNsTmljbmhtVnpaaVQzRm9WWHAxWjFCNVlsWXZObU4yVWxWdE5qZDZWamhRVDI0NWRrSTNOalZHYlhKbk5qaHRPRXAwWWtwWFFuRklUU3N5WW5OWGRDOU1iR2ROWWtFeGRrZFZha1IyUlZwaVlrUlZWMFEwTlhsa0wwVkVNakJFUW0xQmNHeGlla3R6ZWxWTFlrNHlSMmxZUmt0SGFtNWxUVzk1UWpkWFpuYzFaV1o0UkRFeVVVWmtVVmhRWmtObFNVVjNjVkZWY210VWVrcG9iMFZGVUhCdVExaHRiMUJwYlRkNGRIVmtjSFZ0TUcxUWVFTkhkbTFLZGxvcmJYRXdjbkJYWkRSSWFpdFlWRGRQYWtGc1RHNXpXbXRaTjJSaU1FbzViamh1V1VZNVpteHlVek5yZFdSNVJGVXdUa3RCVVZoVlQxRXpOVkpEZHpFMlRYZFVZMHRCVlRWamVEVXJRMGx3ZVdJNVNVNDFjRkpzVXpGcWVFUTRRemhrVm13elRrUndSbEpsTVVJeGVYUTVUeXNyV2pOUWRrSnBTMDFoVUdSNWQwTnVkSGRpVEc5NmNrSXJUVGRYUm5wNEwyTlBWaXM1YVUxVVJraG5PWEZuVkdoalFWUk9ORXQzV1RselprUmpjVEJJY0d3NFJ6azFXSHBZU3l0SFpFUk5iblZQVDJoaVlVcHNaVEpRVUdsd1RFZHVabEJhVjFOcFdFaDNXRlpoWm1wbGFtRXZOa28xVTJkNGNuUTRNaTlRVFhsTU5sSlNSRGhQSzJKM1NubDJNbnBHU1N0RFNWWnNjMjVNTDIxTFVFaFhNRUpwTDJ4VVYxaEhNazFhYmtwNlQxWkdZMDlRVWxoeFUxUmhaRzlIVDAxcVRFRXlNU3QwVUc0dksyeE5iRE4xZERST1YzaHJZblU0YjFOWlMwMTRObXAzT1dKUWEwd3hVWEUzY21GamFDOVhWbmhCTWs5MEszWXdaVGxYZDBoWmIzZE9LelJ3VVU5cFRWZHJjbGh1ZFhOTGQwcHBXVU5qYVU1SU9ESmFXR1pGY21oalpsQkhRWFpsY25sTk5EWTJRbGRKV0d0cGVHSTNiVVoyTm5sQldrVlhXall3WTBrekx6bFpXRmhvWkZoRk1uSTVRV0pUV0hGRGNEVkViMVpMTnpoUlFXWnlWMU13Y21rd05teENkbll6VjJoSlQweEhSVEJpZUZaVUswMXphV0Z4YTFZNU9GZFlMMHBrYlhJMldDdEROQ3R0VEZONlkxSkJZV3RCVFZSNmNsbE5aR2xhWkdvMFkxTkdlRFpJUVhaS2VGQXhUek5pTXpWR1NqQkNXalZEWW1Jd1JHb3pSbGRZTkNzMVVXcHJTMk5oZW5CT01tbzJWVXhPU0dSblowczNZV2xyTUVacE5rdFBhVFJvV2toeVlrNW9WazQ1VVVkb1EyaHVWV3RKYTFCSUt6SkdlSE00VWxSek9ERTBiWG81VFVSM2VtRklUREZ4ZGs5TWNGSkRiSFEzV1dSV1dVd3dkVFZFTldsNU5pdFdlUzlMV0dKTWFVWXZVVXczVVdoUk9VbHVaME5XT1VaU1kxcFZjVWt5U0dOamVuQlJZblF6UjFrM1ZWUTRjRFZYTkVwQk1rbEJZak16WTBzck9URk9lblJVYkhoSWRIQlFjWGh0YXpBcmFWVnhjeklyY25oTFFWSTNVM1puTmtsTVIyMDViREpsWkhGUmJrOTBUM2RKVVdSNWJuSnVRbVJOVVRoeFRrd3JNMDFuTVZwalJWbG1ORUZFT1U1aFRIRkhVVUZpWm0wMWJXSTRPRE54TW1WbWVXd3hOV3N5YW0xSVNqaDJVRTlCVjFFck1FOVZLME5vUTBSSWVDODVVWEUxT0hORmFHNVlWRFU0VmtGcksyUlFUazFYTm14aFVrWlBNSHBKZUZsMFkwSXZjVlpGWW5sMVRsZFBjRkFyVVVFeGNsUjFhelJ2WkVaSk4zQnFkME5sVVc5WE9XUTRiU3NyY3pnellXOVpRbGg2SzFKaVdtUmtaWE55U0hGbVNHZ3ZZMm8zYnpkbVEwNTRRV0ZRVXl0NU9HVndOMkpsUmxaSFREaERObEZRUVVkcGNWSnZMMWhWYUhoSWVrRmhMMnR5VlhkeGRYazFWVGhtWVM5ck5GWk1WaXRFWVZCSU1GaFZTVWh3VDNsUFVVUXhWMEkzT1VWSGNXaFlRVk4yU0dWRlQwVkpRbTFuTmxWV2QyRlFaRlZWT1ZvNWJWVkVUV052Y21ncmFqVlNMMGREVjNkVldYcFFNRTF5Tlc5cVJrNDBZV3RpV25kTlJsVjVSVGxVWm1sSFEzTTFaME5vY1RRME9EbDFZM05MTDFKMVZsTTJXbTU2U0ZGVWIzQjJjMEZaY0c1clJVOXBVbmRNTURCSFRUaFJkMjF1TmxkTE1GaDZRMHREVVhKSlZ6azBjR3B6TDI5b0sxZ3hkVzlSYVUwM1ZEQlZZblZtV1U5U2FHVTBOMjF2ZUVaVFl6QndUWEIxTm5jelNUSnZXRGhXYlVzeU1TODVTMmRtZUdveWFUVlZTR3BXWm5aQmRXTmxkVWcxWnprdk5uWTNSazV4YkdKQmFraGxUMlZ0WnpKSFJtVmpUVU5XZFVGWVdYWklVV1Z1VWtWdGNFaHpUR3R5VkdoNlp6SnhTelptU0VoQ1JTOWhWazUzVlZCWWFITTJhbGRUWlZKM1VqVnlkSGxTVTBWcFZtOXpjRlZ6VFRCMFpHOW9NelJKV2pOTVdEQnljbmhHWVZvNWJUSnViV3M1VGpSbk4zaFljbkk1UzFKbGQwMU9NVUp1YzBGeE5EQlFZbGxZUXpkM1VXVkdNSGRPUVRoc1owZG5jazgwYWxRMFZtbHVVRmxCUkZOWGFrSTFOM2MzVnpWNmNUTmlVVXhaVG5abFdsZHZLMkpVTTJoc2NEbFFUMmhvWlVwS2MwaE5ZMWN2WmpSU1ZIUkdPR3BRWWxSaWNFUTVZMVZOYVZKdFJGbE9VM2xOVWxkdk1qUlFWbVYwZW5OWlUzZFhZek4yYkRkblFYb3hSMDlsVkdKYVZqUXpUU3RyZVU1V1YySkJiekl3WjBSb1lqWlpjRkJKT0hrNWJFbFZTR2d6ZUVKblNHZFlZMUowTVVKVWJtVnZkVWN3U25sRWJEUkRSMlY0T1Rka1ZrcFRNVzh5WkZjcmJ6TkxWMVU0VVd4RVNUQjBTbGRDWms4MFlYQk1ORll2YWtJdlptNU5RWFJaYmxkNFFuSm1aamgwWVZWQ1VIQlJOell4ZW1aU1dFTjVVbXRrWm1GMk1FeEhhV3g0ZUU4dllrNVZMMmwxSzA5WVdYTjFaV1pWWjJaQllrSlNMMGwxY1dSS1FWWlJUR3BHU1dVeWNYbHNWMlZwTVhoaVZuRk9VbGxXVkROSU1ERk9NblZCWmpOTlMyTmxVamMyY1RnMlVqUnRSV0ZtYkdVeWFXRnlTMFJ4VnpSYVVXNHlRV051YkhaSk5HSlVWMEZXVVdjNE9XNVBlVWxKVTNseFUxVXhaREJtTkZCdmRUZHJXSFE0TTAxWlFrRTJZVGxNYmpBMGEwRnNURWxSU0RGNU5FSnhhMUYwVEhsdVR6QnRibWhsTnk4eFduRk1aUzlLYW5wbFNrcDJSRVJwVTBOclRERk1SSEo0ZVZRelRTODRjSGxHTjJKcWFFVlVjM0JJWjA5T2FXNXpObEJxVUVkYVEyOHdPSEpEYkdsbGNVVmhWbWMwVlRkYU5WWjRNRlk0U3pWV1VXWklZbkJPVTFvNVVWUm1UMWRJWTBaUVlsSXhNMFowTm01eWVYVnBTemRtWTFoVGQxQlRhMEZRTUZvMVFreENUMjVCUFQwLnZGaDN0dk4yWGlRWTZEbkVsOWlGXzJxYmtkRDlsRDJHNC1PSnRXTXFQR1M5d1hpS25Cc2x5TC1raGxmekhPTVZncUlLajE5YzVsT0hha1MwR2RBT3JB"/><input type="hidden" name="_eventId" value="submit"/><input type="hidden" name="geolocation"/><input class="btn btn-submit btn-block"
+                   name="submit"
+                   accesskey="l"
+                   value="登录"
+                   tabindex="6"
+                   type="submit"/></section>
+        </form>
+
+    <div>
+        <span class="fa fa-question-circle"></span>
+        <span ><a href="/cas-management/forget">忘记密码? </a></span>
+        <p/></div>
+    
+    <script type="text/javascript">
+        var i = "\u8BF7\u7A0D\u7B49..."
+        $("#fm1").submit(function() {
+            $(":submit").attr("disabled", true);
+            $(":submit").attr("value", i);
+            return true;
+        });
+    </script>
+    <div id="sidebar">
+    <div class="sidebar-content">
+        <p>出于安全考虑，一旦您访问过那些需要您提供凭证信息的应用时，请操作完成之后<a href="logout">登出</a>并关闭浏览器。</p>
+    </div>
+</div>
+
+</div>
+</div>
+            <div id="notices" class="col-sm-12 col-md-6">
+                <!--<div th:replace="fragments/insecure"/>--><div id="cookiesDisabled" class="alert alert-info" style="display:none;">
+    <h2>浏览器禁用了Cookies</h2>
+    <p>您的浏览器不支持Cookies，单点登录无法工作。</p>
+</div>
+<div id="serviceui" class="alert alert-info">
+    <!--<div th:if="${serviceUIMetadata}">--><!--<table>--><!--<tr>--><!--<td>--><!--<img th:if="${serviceUIMetadata.logoUrl}"--><!--th:title="${serviceUIMetadata.displayName}"--><!--th:alt="${serviceUIMetadata.displayName}"--><!--th:src="${serviceUIMetadata.logoUrl}"--><!--th:width="${serviceUIMetadata.logoWidth}"--><!--th:height="${serviceUIMetadata.logoHeight}"/>--><!--<img th:unless="${serviceUIMetadata.logoUrl}"--><!--th:title="${serviceUIMetadata.displayName}"--><!--th:alt="${serviceUIMetadata.displayName}"--><!--th:src="@{images/webapp.png}"--><!--th:width="${serviceUIMetadata.logoWidth}"--><!--th:height="${serviceUIMetadata.logoHeight}"/>--><!--</td>--><!--<td id="servicedesc">--><!--<h2 th:text="${serviceUIMetadata.displayName}"></h2>--><!--<p th:text="${serviceUIMetadata.description}"></p>--><!--</td>--><!--</tr>--><!--</table>--><!--</div>--><!--<div th:unless="${serviceUIMetadata}">--><table>
+            <tr>
+                <td>
+                    <img src="images/webapp.png"/></td>
+                <td id="servicedesc">
+                    <h2>Sakai</h2>
+                    <p>sakai.sustech.edu.cn</p>
+                    </td>
+            </tr>
+        </table>
+    <!--</div>--></div>
+<!--<div th:replace="fragments/cas-resources-list"/>--><!--<div th:unless="${param.wechat}">--><div>
+                <script type="text/javascript" src="https://rescdn.qqmail.com/node/ww/wwopenmng/js/sso/wwLogin-1.0.0.js"></script>
+<style>
+    .img-circle {
+        filter: gray;
+        filter: grayscale(100%);
+        -webkit-filter: grayscale(100%);
+        -moz-filter: grayscale(100%);
+        -ms-filter: grayscale(100%);
+        -o-filter: grayscale(100%);
+        filter: grayscale(100%);
+    }
+
+    .img-circle.active, .img-circle:hover {
+        filter: none;
+        -webkit-filter: grayscale(0%);
+        -moz-filter: grayscale(0%);
+        -ms-filter: grayscale(0%);
+        -o-filter: grayscale(0%);
+    }
+    .impowerBox, .impowerBox .status_icon, .impowerBox .status_txt {
+        width:182px;
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    .impowerBox {
+        line-height: 1.6;
+        position: relative;
+        width: 100%;
+        z-index: 1;
+        text-align: center;
+    }
+
+    .impowerBox .title {
+        width: 160px;
+        height: 24px;
+        line-height: 24px;
+        margin: 0 auto;
+        color: #0082EF;
+        font-size: 20px;
+    }
+    .logo {
+        width: 29px;
+        height: 24px;
+        vertical-align: top;
+        margin-right: 8px;
+    }
+
+    .impowerBox .qrcode {
+        width: 280px;
+        margin-top: 6px;
+        vertical-align:top;
+    }
+
+    .impowerBox .info {
+        width: 280px;
+        margin: 0 auto
+    }
+
+    .impowerBox .status {
+        text-align: left;
+        color: #737C84;
+        font-size: 0;
+        margin-top: 10px;
+    }
+
+    .impowerBox .status.status_browser {
+        text-align: center;
+        padding: 2px 0;
+    }
+    .impowerBox .status.status_browser p:nth-child(2) {
+        display: none;
+    }
+
+    .impowerBox .status p {
+        font-size: 13px
+    }
+
+    .impowerBox .status_txt p {
+        top: -2px;
+        position: relative;
+        margin: 0
+    }
+    .impowerBox .icon38_msg {
+        display: inline-block;
+        width: 38px;
+        height: 38px;
+        background-size: 38px 38px;
+        background-position: left top;
+        background-repeat: no-repeat;
+        margin-right: 12px;
+    }
+    .impowerBox .icon38_msg.succ {
+        -webkit-animation: scaleBig 0.2s ease-out 0s;
+        -moz-animation: scaleBig 0.2s ease-out 0s;
+        -ms-animation: scaleBig 0.2s ease-out 0s;
+        -o-animation: scaleBig 0.2s ease-out 0s;
+        animation: scaleBig 0.2s ease-out 0s;
+    }
+    .status.status_succ .status_txt {
+        -webkit-animation: transformRight 0.2s ease-out 0s;
+        -moz-animation: transformRight 0.2s ease-out 0s;
+        -ms-animation: transformRight 0.2s ease-out 0s;
+        -o-animation: transformRight 0.2s ease-out 0s;
+        animation: transformRight 0.2s ease-out 0s;
+    }
+    .status.status_fail {
+        -webkit-animation: transformLeft 0.2s ease-out 0s;
+        -moz-animation: transformLeft 0.2s ease-out 0s;
+        -ms-animation: transformLeft 0.2s ease-out 0s;
+        -o-animation: transformLeft 0.2s ease-out 0s;
+        animation: transformLeft 0.2s ease-out 0s;
+    }
+    .impowerBox .status_succ,.impowerBox .status_fail {
+        margin-left: 26px;
+    }
+    .impowerBox .status_succ .status_txt h4,.impowerBox .status_fail .status_txt h4{
+        font-size: 18px;
+        line-height: 25px;
+        margin-bottom: 2px;
+    }
+    .impowerBox .status_succ .status_txt p,.impowerBox .status_fail .status_txt p{
+        font-size: 12px;
+        line-height: 17px;
+        color: #A1A7AC;
+    }
+    .impowerBox .icon38_msg.succ {
+        background-image: url("/cas/images/Succ_2x$38dc7620.png");
+    }
+
+    .impowerBox .icon38_msg.warn {
+        background-image: url("/cas/images/Fail_2x$f2bea9cb.png");
+        border-radius: 50%;
+        background-color: #ffffff;
+    }
+
+    .impowerBox .icon38_msg.error {
+        background-image: url("/cas/images/InfoBig_2x$4b9e452f.png");
+        border-radius: 50%;
+        background-color: #ffffff;
+    }
+
+    @-webkit-keyframes  scaleBig {
+        0% {
+            opacity: 0;
+            transform: scale(0);
+        }
+        100% {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
+    @keyframes scaleBig {
+        0% {
+            opacity: 0;
+            transform: scale(0);
+        }
+        100% {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
+    @-webkit-keyframes  transformRight {
+        0% {
+            opacity: 0;
+            transform: translateX(-15px);
+        }
+        100% {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+    @keyframes transformRight {
+        0% {
+            opacity: 0;
+            transform: translateX(-15px);
+        }
+        100% {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+    @-webkit-keyframes  transformLeft {
+        0% {
+            opacity: 0;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
+    @keyframes transformLeft {
+        0% {
+            opacity: 0;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
+    .logintitle{
+        height: 24px;
+        line-height: 24px;
+        margin: 0 auto;
+        color: #0082EF;
+        font-size: 20px;
+        text-align: center;
+    }
+    .logintitleWX{
+        height: 24px;
+        line-height: 24px;
+        margin: 0 auto;
+        color: #13ef00;
+        font-size: 20px;
+        text-align: center;
+    }
+</style>
+<div id="myTabTitle" class="row">
+    <div align="center">
+        <h2 style="color:white;"><a href="#wechatLogin" data-toggle="tab" onclick="hideWechatQR()"><img id="weworkImg" width="56px" height="56px" class="img-circle active" src="/cas/images/wework.png"></a> | <a href="#weixin" data-toggle="tab" onclick="showWechatQR()"><img id="wechatImg" width="56px" height="56px"  class="img-circle" src="/cas/images/wechat.png"></a></h2>
+    </div>
+</div>
+<div id="myTabContent" class="tab-content">
+    <div class="tab-pane fade in active" id="wechatLogin">
+        <div align="center"><div class="logintitle">企业微信登录</div><div id="wx_reg"></div></div>
+    </div>
+
+    <div class="tab-pane fade" id="weixin" style="height:405px;">
+        <div align="center"> <div class="logintitleWX">微信登录</div>
+            <div class="impowerBox" style="width:280px;height:400px;display:block;">
+                <div id="qrcode" style="background-color:white;width:280px;height:280px;padding:6px;margin-top: 20px;"></div>
+                <div class="info">
+                    <div class="status status_browser js_status" id="wx_default_tip"><p>使用微信扫描二维码登录</p></div>
+                    <div class="status status_succ js_status" style="display:none" id="wx_after_scan"><i class="status_icon icon38_msg succ"></i><div class="status_txt"><h4>扫码成功</h4><p>请在微信中点击确认即可登录</p></div></div>
+                    <div class="status status_fail js_status" style="display:none" id="wx_after_cancel"><i class="status_icon icon38_msg warn"></i><div class="status_txt"><h4>您已取消此次登录</h4><p>您可<a onclick="showWechatQR()">刷新</a>后再次扫描登录</p></div></div>
+                    <div class="status status_fail js_status" style="display:none" id="wx_after_warning"><i class="status_icon icon38_msg error"></i><div class="status_txt"><h4>微信认证异常</h4><p>您可刷新页面后再次扫描登录，或用其他方式登录</p></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/cas/js/qrcode.min.js"></script>
+<script>
+    if(areCookiesEnabled()){
+        window.WwLogin({
+            "id" : "wx_reg",
+            "appid" : "wx8839ace7048d181b",
+            "agentid" : "1000053",
+            "redirect_uri" :"https%3A%2F%2Fcas.sustech.edu.cn%2Fcas%2Flogin%3Fwechat%3Dsuccess",
+            "state" : "RPTZoKcqxUGLeDNg",
+            "href" : "https://cas.sustc.edu.cn/cas/css/wechat.css",
+        });
+        var timer = null;
+        var state = "RPTZoKcqxUGLeDNg";
+        var qrcode = new QRCode(document.getElementById("qrcode"), {
+            text: "https:\/\/open.weixin.qq.com\/connect\/oauth2\/authorize?appid=wx8839ace7048d181b\u0026response_type=code\u0026scope=snsapi_base\u0026state=RPTZoKcqxUGLeDNg\u0026redirect_uri=https%3A%2F%2Fcas.sustech.edu.cn%2Fcas%2Flogin%3Fwechat%3Dcallback\u0026a=1#wechat_redirect",
+            width: 268,
+            height: 268,
+            colorDark: "#000000",
+            colorLight: "#ffffff",
+            correctLevel: QRCode.CorrectLevel.L
+        });
+        document.getElementById("qrcode").title = "";
+    }else{
+        $("#myTabContent").hide();
+        $("#myTabTitle").hide();
+    }
+    function showWechatQR(){
+        $('#wechatImg').addClass('active');
+        $('#weworkImg').removeClass('active');
+        changeStatus("default");
+        timer = window.setInterval(showalert, 5000);
+    }
+    function hideWechatQR(){
+        clearInterval(timer);
+        $('#wechatImg').removeClass('active');
+        $('#weworkImg').addClass('active');
+    }
+    function showalert() {
+        $.get("?wechat=check&state="+state, {
+        }, function(data) {
+            var temp = eval(data);
+            if(temp.status == 'cancel'){
+                clearInterval(timer);
+                changeStatus(temp.status)
+                window.event.returnValue = false;
+                //window.location.reload();
+            }else if(temp.status == 'success'){
+                clearInterval(timer);
+                PostSubmit('',temp)
+            }else if(temp.status == 'waiting'){
+                changeStatus(temp.status)
+            }else if(temp.status =='nocode'){
+                clearInterval(timer);
+                changeStatus(temp.status)
+            }
+        });
+    }
+    function changeStatus(status){
+        if(status === 'cancel'){
+            $("#wx_default_tip").hide();
+            $("#wx_after_scan").hide();
+            $("#wx_after_cancel").show();
+            $("#wx_after_warning").hide();
+        }else if(status === 'waiting'){
+            $("#wx_default_tip").hide();
+            $("#wx_after_scan").show();
+            $("#wx_after_cancel").hide();
+            $("#wx_after_warning").hide();
+        }else if(status === 'default'){
+            $("#wx_default_tip").show();
+            $("#wx_after_scan").hide();
+            $("#wx_after_cancel").hide();
+            $("#wx_after_warning").hide();
+        }else{
+            $("#wx_default_tip").hide();
+            $("#wx_after_scan").hide();
+            $("#wx_after_cancel").hide();
+            $("#wx_after_warning").show();
+        }
+    }
+    function areCookiesEnabled() {
+        if ($.cookie == undefined) {
+            console.log("JQuery Cookie library is not defined")
+            return;
+        }
+
+        $.cookie('cookiesEnabled', 'true');
+        var value = $.cookie('cookiesEnabled');
+        $.removeCookie('cookiesEnabled');
+        return value != undefined;
+
+    }
+</script>
+
+
+
+</div>
+            </div>
+        </div>
+    </div>
+    <footer>
+    <div id="copyright" style="text-align: center">
+        <p>版权所有 &copy; 2017 南方科技大学</p>
+        <p>网络信息中心技术支持，电话：0777</p>
+        <!--<p>Powered by <a href="http://www.apereo.org/cas">--><!--Apereo Central Authentication Service--><!--<span th:text="${T(org.apereo.cas.util.CasVersion).getVersion()}"></span>--><!--<span th:text="${T(org.apereo.cas.util.CasVersion).getDateTime()}"></span> </a>--><!--</p>--></div>
+</footer>
+</div>
+<div><!--<script src="//cdnjs.cloudflare.com/ajax/libs/headjs/1.0.3/head.min.js"></script>-->
+<script src="/cas/js/head.min.js"></script>
+<script type="text/javascript" src="/cas/js/cas.js"></script>
+
+
+
+
+</div>
+
+</body>
+</html>
